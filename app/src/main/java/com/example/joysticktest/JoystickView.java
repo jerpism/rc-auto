@@ -21,6 +21,7 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
     private JoystickListener joystickCallback;
 
 
+    //Asetetaan koot tatille
     private void setupDimensions(){
         centerX = getWidth() / (float) 2;
         centerY = getHeight() / (float) 2;
@@ -58,6 +59,7 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
             joystickCallback = (JoystickListener) context;*/
     }
 
+    //Piirretään tatti
     private void drawJoystick(float newX, float newY){
         if(getHolder().getSurface().isValid()){
             Canvas myCanvas = this.getHolder().lockCanvas();
@@ -92,28 +94,32 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if(view.equals(this)) {
+            //Liikutetaan tattia, jos käyttäjä koskettaa näyttöä
             if (motionEvent.getAction() != motionEvent.ACTION_UP) {
                 float displacement = (float) Math.sqrt((Math.pow(motionEvent.getX() - centerX, 2)) + Math.pow(motionEvent.getY() - centerY, 2));
                 if (displacement < baseRadius)
                     drawJoystick(motionEvent.getX(), motionEvent.getY());
                 else {
                     float ratio = baseRadius / displacement;
-                    float constrainedX = centerX + (motionEvent.getX() - centerX) * ratio;
-                    float constrainedY = centerY + (motionEvent.getY() - centerX) * ratio;
+                  //  float constrainedX = centerX + (motionEvent.getX() - centerX) * ratio;
+                 //   float constrainedY = centerY + (motionEvent.getY() - centerX) * ratio;
 //                    drawJoystick(constrainedX, constrainedY);
 
-                    drawJoystick(motionEvent.getX(), motionEvent.getY());
+                    drawJoystick(motionEvent.getX(), motionEvent.getY()); //Piirretään tikku liikutettuun kohtaan
                     try {
 //                        joystickCallback.onJoystickMoved((constrainedX - centerX) / baseRadius, (constrainedY - centerY) / baseRadius, getId());
+                        //Kutsutaan funktiota, joka lähettää liikutetun suunnan MainActivityyn.
                        joystickCallback.onJoystickMoved((motionEvent.getX()-centerX) / baseRadius, (motionEvent.getY()-centerY) / baseRadius, getId());
                     } catch (NullPointerException ne) {
                         System.out.println("non");
                     }
 //                    joystickCallback.onJoystickMoved((motionEvent.getX()-centerX) / baseRadius, (motionEvent.getY()-centerY) / baseRadius, getId());
                 }
+                //Jos käyttäjä taas nostaa sormensa pois näytöltä siirretään tatti takaisin keskelle
             } else {
                 drawJoystick(centerX, centerY);
                 try {
+                    //Kerrotaan MainActivitylle, että tatti on keskellä
                     joystickCallback.onJoystickMoved(0, 0, getId());
                 } catch (NullPointerException ne) {
                     System.out.println("non");

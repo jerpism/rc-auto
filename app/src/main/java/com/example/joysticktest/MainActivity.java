@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements JoystickView.Joys
         System.out.println(hc05.getName());
 
         int counter = 0;
+        //Yritetään yhdistää hc05 adapteriin 3 kertaa
         do {
             try {
                 this.mBtSocket = hc05.createInsecureRfcommSocketToServiceRecord(mUUID);
@@ -62,8 +63,13 @@ public class MainActivity extends AppCompatActivity implements JoystickView.Joys
         
         txtY.setText("Y: " + String.valueOf(yPercent));
         txtX.setText("X: " + String.valueOf(xPercent));
-
-        if(yPercent < -1.0 ) {
+        if(yPercent == 0.0 && xPercent == 0.0) {
+            try{
+                this.outputStream.write(88); // X
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }else if(yPercent < -1.0 ) {
             txtD.setText("Ylös");
             try {
                 this.outputStream.write(87); //W
