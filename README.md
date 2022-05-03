@@ -1,2 +1,2 @@
 # rc-auto
-Tietoliikenteen sovellusprojektin juttu
+Tietoliikenteen sovellusprojektin jutussa käytetty sovellus
